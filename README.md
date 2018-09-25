@@ -1,1 +1,2 @@
 # ACM-ICPC
+## Binary Search
