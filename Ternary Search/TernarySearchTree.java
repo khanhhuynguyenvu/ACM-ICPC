@@ -1,5 +1,5 @@
 public class TernarySearchTree {
-    Node root;
+    private Node root;
     private TernarySearchTree(){
         this.root = null;
     }
@@ -21,15 +21,11 @@ public class TernarySearchTree {
         }
         return node;
     }
-    public void insert(String key){
-        char s[] = key.toCharArray();
+    private void insert(String key){
         if(key.isEmpty()) throw  new IllegalArgumentException();
         this.root = insert(key,0,this.root);
     }
-    public char isExits(){
-        return root.data;
-    }
-    public boolean isContainsKey(String key){
+    private boolean isContainsKey(String key){
         if(key == null || key.equals("")) throw  new IllegalArgumentException();
         int pos = 0;
         Node node = this.root;
@@ -46,14 +42,39 @@ public class TernarySearchTree {
         }
         return  false;
     }
+    private void isContainsKey(String key,TernarySearchTree tree){
+        System.out.println("Key word : "+key+" is "+(tree.isContainsKey(key)?"found!":"not found!"));
+    }
+    private void TraverseTST(Node node,char res[],int depth){
+        if(node != null){
+            TraverseTST(node.left,res,depth);
+            res[depth] = node.data;
+            if(node.isEnd){
+                for(int i = 0 ; i < depth+1;i++){
+                    System.out.print(res[i]);
+                }
+                System.out.println();
+            }
+            TraverseTST(node.center,res,depth+1);
+            TraverseTST(node.right,res,depth);
+        }
+    }
+    private void TraverseTST(){
+        int Max = 1000;
+        char temp[] = new char[Max];
+        System.out.println("Traverse ternary search tree: ");
+        TraverseTST(this.root,temp,0);
+    }
     public static void main(String[] args) {
         TernarySearchTree tree = new TernarySearchTree();
-        tree.insert("AB");
-        tree.insert("ABC");
-        tree.insert("cat");
-        tree.insert("doggy");
-        tree.insert("dog");
-        System.out.println(tree.isContainsKey("dog"));
+        tree.insert("An");
+        tree.insert("Tung");
+        tree.insert("Binh");
+        tree.insert("Lee");
+        tree.insert("Vy");
+        tree.insert("Nhat");
+        tree.isContainsKey("Ans",tree);
+        tree.TraverseTST();
     }
 }
 class Node{
