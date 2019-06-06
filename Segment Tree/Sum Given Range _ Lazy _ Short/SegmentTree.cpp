@@ -53,7 +53,7 @@ const   int            md  = 0;
 // PlayGround
 //SGR Lazy Sum of given range
 struct Node{
-    int val=INF;
+    int val=0;
     int lazy=0;
 };
 typedef vector<Node> vn;
@@ -67,39 +67,44 @@ void buildTree(vi& a,vn& st,int left,int right,int index){
     buildTree(a,st,mid+1,right,2*index+2);
     st[index].val = st[2*index+1].val+st[2*index+2].val;
 }
-void payLate(vn& st,int index){
-    int val = st[index].lazy;
-    st[2*index+1].lazy+=val;
-    st[2*index+1].val+=val;
-    st[2*index+2].lazy+=val;
-    st[2*index+2].val+=val;
-    st[index].lazy=0;
+void payFirst(vn& st,int index,int l,int r){
+    if(st[index].lazy!=0){
+        st[index].val+=st[index].lazy*(r-l+1);
+        if(l!=r){
+            st[2*index+1].lazy+=st[index].lazy;
+            st[2*index+2].lazy+=st[index].lazy;
+        }
+        st[index].lazy=0;
+    }
 }
-void updateQuery_sumQueryLazy(vn& st,int left,int right,int from,int to,int delta,int index){
+void update(vn& st,int left,int right,int from,int to,int delta,int index){
+    payFirst(st,index,left,right);
     if(left>to || right<from){
         return;
     }
     if(from<=left && right<=to){
-        st[index].val+=delta;
-        st[index].lazy+=delta;
+        st[index].val+=delta*(right-left+1);
+        if(left!=right){
+            st[2*index+1].lazy+=delta;
+            st[2*index+2].lazy+=delta;
+        }
         return;
     }
-    payLate(st,index);
     int mid = left+(right-left)/2;
-    updateQuery_sumQueryLazy(st,left,mid,from,to,delta,2*index+1);
-    updateQuery_sumQueryLazy(st,mid+1,right,from,to,delta,2*index+2);
+    update(st,left,mid,from,to,delta,2*index+1);
+    update(st,mid+1,right,from,to,delta,2*index+2);
     st[index].val = st[2*index+1].val+st[2*index+2].val;
 }
-int sumQueryLazy(vn& st,int left,int right,int from,int to,int index){
+int get(vn& st,int left,int right,int from,int to,int index){
+    payFirst(st,index,left,right);
     if(left>to || right<from){
         return 0;
     }
     if(from<=left && right<=to){
         return st[index].val;
     }
-    payLate(st,index);
     int mid = left+(right-left)/2;
-    return sumQueryLazy(st,left,mid,from,to,2*index+1)+sumQueryLazy(st,mid+1,right,from,to,2*index+2);
+    return get(st,left,mid,from,to,2*index+1)+get(st,mid+1,right,from,to,2*index+2);
 }
 int main(){
     Inp
@@ -112,16 +117,13 @@ int main(){
     }
     int h = (int)ceil(log2(n));
     int szTree=2*(int)pow(2,h)-1;
-    //vi segtree(szTree,INF);
-    //vi lazy(szTree,0);
     vn st(szTree);
     buildTree(a,st,0,n-1,0);
-    debug(st[2].val);
-    int from=1,to=4;
-    int delta=10;
-    updateQuery_sumQueryLazy(st,0,n-1,from,to,delta,0);
-    from=5,to=6;
-    int res = sumQueryLazy(st,0,n-1,from,to,0);
+    int from=0,to=6;
+    int delta=2;
+    update(st,0,n-1,from,to,delta,0);
+    from=0,to=6;
+    int res = get(st,0,n-1,from,to,0);
     cout<<res<<"\n";
 return 0;
 }

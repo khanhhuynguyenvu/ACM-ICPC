@@ -124,10 +124,10 @@ int main(){
     vi segtree(szTree,INF);
     vi lazy(szTree,0);
     buildTree(a,segtree,0,n-1,0);
-    int from=1,to=4;
-    int delta=2;
+    int from=4,to=5;
+    int delta=5;
     updateQuery_sumQueryLazy(segtree,lazy,0,n-1,from,to,delta,0);
-    from=3,to=4;
+    from=1,to=6;
     int res = sumQueryLazy(segtree,lazy,0,n-1,from,to,0);
     cout<<res<<"\n";
 return 0;
