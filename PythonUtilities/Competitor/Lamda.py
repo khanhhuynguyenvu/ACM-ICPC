@@ -3,7 +3,7 @@ new_numbers = map(lambda x: 9 if x==4 else x, numbers)
 print(list(new_numbers))
 
 # Filter and map
-
+#
 # ar_a = list(reversed(a))
 # tmp_x = next(filter(lambda x: x != 9, ar_a.copy()), 9)
 # res_a = list(map(lambda x: '9' if x == tmp_x else str(x), ar_a.copy()))
